@@ -8,10 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State private var thingie: String = ""
     var body: some View {
-        Text("Hello, world!")
+        Text("Hey kiddos")
+        TextField("Do a thing", text: $thingie)
         Button(action: cicuta_virosa) {
-            Text("Vibe")
+            Text("let's break shit")
         }
             .padding()
     }

